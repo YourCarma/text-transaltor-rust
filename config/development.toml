@@ -1,0 +1,17 @@
+[server]
+address = "0.0.0.0:10001"
+llm_mode="openai"
+#mode="ollama"
+
+[llm_client.openai]
+address="http://192.168.0.10:8097"
+openai_api_key="sk-or-v1-no-auth"
+model_name="tencent.Hunyuan-MT-Chimera-7B.Q8_0"
+use_proxy=false
+proxy_address="*your proxy url*"
+# model_name="openai/gpt-5-image-mini"
+
+[logger]
+level = "debug"
+use_loki = "false"
+address = "http://0.0.0.0:3110"
