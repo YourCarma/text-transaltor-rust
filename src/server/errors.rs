@@ -5,9 +5,9 @@ use serde::Serialize;
 use thiserror::Error;
 use utoipa::ToSchema;
 
+use crate::modules::llm_client::errors::TranslatorErrors;
 use crate::modules::loader::errors::LoaderErrors;
 use crate::server::swagger::SwaggerExample;
-use crate::modules::llm_client::errors::TranslatorErrors;
 
 pub type ServerResult<T> = Result<T, ServerError>;
 
@@ -57,42 +57,72 @@ impl ServerError {
             ServerError::NoCredits(msg) => (msg.to_owned(), StatusCode::PAYMENT_REQUIRED),
             ServerError::RateLimited(msg) => (msg.to_owned(), StatusCode::TOO_MANY_REQUESTS),
             ServerError::Timeout(msg) => (msg.to_owned(), StatusCode::REQUEST_TIMEOUT),
-            ServerError::ServiceUnavailable(msg) => (msg.to_owned(), StatusCode::SERVICE_UNAVAILABLE),
+            ServerError::ServiceUnavailable(msg) => {
+                (msg.to_owned(), StatusCode::SERVICE_UNAVAILABLE)
+            }
             ServerError::Unauthorized(msg) => (msg.to_owned(), StatusCode::UNAUTHORIZED),
             ServerError::InternalError(msg) => (msg.to_owned(), StatusCode::INTERNAL_SERVER_ERROR),
             ServerError::ModelModerationError(msg) => (msg.to_owned(), StatusCode::FORBIDDEN),
             ServerError::SerdeError(msg) => (msg.to_owned(), StatusCode::UNPROCESSABLE_ENTITY),
-            ServerError::UnsupportedLanguage(msg) => (msg.to_owned(), StatusCode::UNPROCESSABLE_ENTITY)
+            ServerError::UnsupportedLanguage(msg) => {
+                (msg.to_owned(), StatusCode::UNPROCESSABLE_ENTITY)
+            }
         }
     }
 }
 
 impl From<TranslatorErrors> for ServerError {
     fn from(err: TranslatorErrors) -> Self {
-        tracing::error!("Error: {err}", err=err.to_string());
+        tracing::error!("Error: {err}", err = err.to_string());
         match err {
             TranslatorErrors::BadRequest(err) => ServerError::BadRequest(err.to_string()),
-            TranslatorErrors::DeserializeError(_err) => ServerError::DeserializeError("No image on response of model. Try again.".to_string()),
-            TranslatorErrors::IOError(_err) => ServerError::IOError("File saving or sending error.".to_string()),
-            TranslatorErrors::RequestError(_err) => ServerError::RequestError("Request Error".to_string()),
-            TranslatorErrors::InvalidResponse(_err) => ServerError::InvalidResponse("Invalid Response from generate API. See the logs".to_string()),
-            TranslatorErrors::ModelModerationError(_err) => ServerError::ModelModerationError("Model API is on moderation.Try another model".to_string()),
-            TranslatorErrors::NoCredits(_err) => ServerError::NoCredits("You have not credits on API".to_string()),
-            TranslatorErrors::RateLimited(_err) => ServerError::RateLimited("Too many requests for API".to_string()),
-            TranslatorErrors::ServiceUnavailable(_err) => ServerError::ServiceUnavailable("Model provider is unavailable".to_string()),
-            TranslatorErrors::Timeout(_err) => ServerError::Timeout("API request to model timeout".to_string()),
-            TranslatorErrors::Unauthorized(_err) => ServerError::Unauthorized("Unauthorized to API".to_string()),
-            TranslatorErrors::AnotherError(_err) => ServerError::InternalError("Internal server error".to_string()),
+            TranslatorErrors::DeserializeError(_err) => ServerError::DeserializeError(
+                "No image on response of model. Try again.".to_string(),
+            ),
+            TranslatorErrors::IOError(_err) => {
+                ServerError::IOError("File saving or sending error.".to_string())
+            }
+            TranslatorErrors::RequestError(_err) => {
+                ServerError::RequestError("Request Error".to_string())
+            }
+            TranslatorErrors::InvalidResponse(_err) => ServerError::InvalidResponse(
+                "Invalid Response from generate API. See the logs".to_string(),
+            ),
+            TranslatorErrors::ModelModerationError(_err) => ServerError::ModelModerationError(
+                "Model API is on moderation.Try another model".to_string(),
+            ),
+            TranslatorErrors::NoCredits(_err) => {
+                ServerError::NoCredits("You have not credits on API".to_string())
+            }
+            TranslatorErrors::RateLimited(_err) => {
+                ServerError::RateLimited("Too many requests for API".to_string())
+            }
+            TranslatorErrors::ServiceUnavailable(_err) => {
+                ServerError::ServiceUnavailable("Model provider is unavailable".to_string())
+            }
+            TranslatorErrors::Timeout(_err) => {
+                ServerError::Timeout("API request to model timeout".to_string())
+            }
+            TranslatorErrors::Unauthorized(_err) => {
+                ServerError::Unauthorized("Unauthorized to API".to_string())
+            }
+            TranslatorErrors::AnotherError(_err) => {
+                ServerError::InternalError("Internal server error".to_string())
+            }
         }
     }
 }
 
 impl From<LoaderErrors> for ServerError {
     fn from(err: LoaderErrors) -> Self {
-        tracing::error!("Error: {err}", err=err.to_string());
+        tracing::error!("Error: {err}", err = err.to_string());
         match err {
-            LoaderErrors::IOError(err) => ServerError::BadRequest("Error reading file".to_string()),
-            LoaderErrors::AnotherError(_err) => ServerError::InternalError("Internal Server Error".to_string()),
+            LoaderErrors::IOError(_err) => {
+                ServerError::BadRequest("Error reading file".to_string())
+            }
+            LoaderErrors::AnotherError(_err) => {
+                ServerError::InternalError("Internal Server Error".to_string())
+            }
         }
     }
 }

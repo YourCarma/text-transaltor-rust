@@ -27,5 +27,5 @@ pub enum TranslatorErrors {
     #[error("Bad request")]
     BadRequest(String),
     #[error("Another Error: {0}")]
-    AnotherError(String)
+    AnotherError(String),
 }

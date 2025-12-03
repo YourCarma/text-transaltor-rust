@@ -2,26 +2,29 @@ use std::sync::Arc;
 
 use axum::extract::{Json, State};
 use axum::response::IntoResponse;
-use config::Config;
 
 use crate::errors::ErrorResponse;
-use crate::server::AppState;
-use crate::server::config::ServerConfig;
-use crate::server::errors::{ServerError, ServerResult};
-use crate::server::router::models::{TextTransaltorRequest, TextTransaltorResponse};
 use crate::modules::llm_client::LLMClient;
 use crate::modules::llm_client::models::TranslateTask;
+use crate::server::AppState;
+use crate::server::errors::{ServerError, ServerResult};
+use crate::server::router::models::{TextTransaltorRequest, TextTransaltorResponse};
 
-fn check_translate_is_available(transalte_task: &TranslateTask, available_languages: Vec<String>) -> bool{
-
+fn check_translate_is_available(
+    transalte_task: &TranslateTask,
+    available_languages: Vec<String>,
+) -> bool {
     let source_language = transalte_task.source_language();
     let target_language = transalte_task.target_language();
-    if !available_languages.contains(&source_language) || !available_languages.contains(&target_language){
+    if !available_languages.contains(source_language)
+        || !available_languages.contains(target_language)
+    {
         tracing::error!("Language not supported!");
-        return false
-    } 
+        return false;
+    }
     true
 }
+
 #[utoipa::path(
     post,
     path = "/api/v1/translate/text",
@@ -39,7 +42,7 @@ Translate text to following language using LLM
 
 "#,
     responses(
-        (status = 200, description="Transalted Data", body = TextTransaltorResponse),
+        (status = 200, description="### Translated Data", body = TextTransaltorResponse),
         (status = 204, description="### IO error. Maybe error on saving or reading file", body = ErrorResponse),
         (status = 400, description="### Bad request to API", body = ErrorResponse),
         (status = 401, description="### Unauth user on target API", body = ErrorResponse),
@@ -61,10 +64,11 @@ where
 {
     let task = transalte_body.translate_task().to_owned();
     let available_languages = state.config.server().allowed_languages().to_owned();
-    if !check_translate_is_available(&task, available_languages){
-        return  Err(ServerError::UnsupportedLanguage(format!("Указанный язык не поддерживается")))
+    if !check_translate_is_available(&task, available_languages) {
+        return Err(ServerError::UnsupportedLanguage(
+            "Указанный язык не поддерживается".to_string(),
+        ));
     }
-    
     let translated_text = state.llm_client.translate(task).await?;
     let translated_response = TextTransaltorResponse::new(translated_text);
     Ok(Json(translated_response))

@@ -4,7 +4,6 @@ use utoipa::ToSchema;
 
 use crate::server::errors::ServerError;
 
-
 #[derive(Debug, Deserialize, Serialize, ToSchema)]
 pub struct ErrorResponse {
     code: u16,

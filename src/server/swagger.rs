@@ -1,26 +1,33 @@
 use crate::errors::*;
-use crate::server::router::models::{ModelGardenResponse, TextTransaltorRequest, TextTransaltorResponse};
 use crate::server::router::llm_client::*;
 use crate::server::router::loader::*;
+use crate::server::router::models::{
+    ModelGardenResponse, TextTransaltorRequest, TextTransaltorResponse,
+};
 use utoipa::OpenApi;
 
 #[derive(OpenApi)]
 #[openapi(
     info(
-        title="Text Transaltor",
+        title="Text Translator",
         version="0.9.0",
         description = "Service for text transalting with LLM"
     ),
     tags(
         (
-            name = "Transaltor",
-            description = "Transalting text with LLM",
+            name = "Translator",
+            description = "### Transalting text with LLM.",
+        ),
+        (
+            name = "Loader",
+            description = "### Get formalized available language translation combinations",
         ),
     ),
 
     components(
         schemas(
             TextTransaltorRequest,
+            TextTransaltorResponse,
             ModelGardenResponse,
             Successful,
             ErrorResponse,

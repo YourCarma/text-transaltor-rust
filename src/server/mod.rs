@@ -13,15 +13,15 @@ use swagger::ApiDoc;
 use utoipa::OpenApi;
 use utoipa_swagger_ui::SwaggerUi;
 
-use crate::modules::llm_client::LLMClient;
 use crate::config::ServiceConfig;
+use crate::modules::llm_client::LLMClient;
 
 pub struct AppState<R>
 where
     R: LLMClient + ?Sized + Send + Sync,
 {
     llm_client: Arc<R>,
-    config: Arc<ServiceConfig>
+    config: Arc<ServiceConfig>,
 }
 
 impl<R> AppState<R>
@@ -29,7 +29,7 @@ where
     R: LLMClient + ?Sized + Send + Sync,
 {
     pub fn new(llm_client: Arc<R>, config: Arc<ServiceConfig>) -> Self {
-        AppState { llm_client: llm_client, config: config }
+        AppState { llm_client, config }
     }
 }
 
@@ -45,14 +45,13 @@ where
         .route("/", get(Html("<a href=\"/docs\">ДОКУМЕНТАЦИЯ</h1>")))
         .route(
             "/api/v1/translate/text",
-            post(router::llm_client::translate_text)
+            post(router::llm_client::translate_text),
         )
         .route(
             "/api/v1/loader/model-garden",
-            get(router::loader::get_available_languages)
+            get(router::loader::get_available_languages),
         )
         .route("/metrics", get(|| async move { metric_handle.render() }))
         .layer(prometheus_layer)
         .with_state(app_arc)
 }
-

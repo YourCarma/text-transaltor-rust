@@ -1,6 +1,6 @@
 use crate::logger::LoggerConfig;
-use crate::server::config::ServerConfig;
 use crate::modules::llm_client::config::LLMClientConfig;
+use crate::server::config::ServerConfig;
 
 use config::{Config, ConfigError, Environment, File, FileFormat};
 use derive_builder::Builder;
@@ -26,7 +26,6 @@ impl ServiceConfig {
 
         let dev_file_config = File::with_name(DEV_FILE_CONFIG_PATH);
 
-        
         let run_mode = std::env::var(SERVICE_RUN_MODE).unwrap_or("development".into());
         let run_mode_file_path = format!("./config/{}", run_mode);
 
@@ -37,22 +36,22 @@ impl ServiceConfig {
         } else {
             dotenv::from_filename(run_mode_env_name).ok();
 
-        let file_config = File::with_name(&run_mode_file_path)
-            .format(FileFormat::Toml)
-            .required(false);
+            let file_config = File::with_name(&run_mode_file_path)
+                .format(FileFormat::Toml)
+                .required(false);
 
-        let env_config = Environment::with_prefix(CONFIG_PREFIX)
-            .prefix_separator("__")
-            .separator("__")
-            .try_parsing(true);
+            let env_config = Environment::with_prefix(CONFIG_PREFIX)
+                .prefix_separator("__")
+                .separator("__")
+                .try_parsing(true);
 
-        let settings = Config::builder()
-            .add_source(dev_file_config)
-            .add_source(file_config)
-            .add_source(env_config)
-            .build()?;
+            let settings = Config::builder()
+                .add_source(dev_file_config)
+                .add_source(file_config)
+                .add_source(env_config)
+                .build()?;
 
-        settings.try_deserialize()
+            settings.try_deserialize()
+        }
     }
-}
 }

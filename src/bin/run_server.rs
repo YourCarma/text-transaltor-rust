@@ -8,7 +8,6 @@ use text_translator_rust::config::ServiceConfig;
 use text_translator_rust::logger;
 use text_translator_rust::server::AppState;
 
-
 #[tokio::main(worker_threads = 8)]
 async fn main() -> anyhow::Result<()> {
     let config = ServiceConfig::new()?;

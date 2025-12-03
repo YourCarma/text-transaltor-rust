@@ -18,8 +18,8 @@ pub struct TextTransaltorResponse {
 }
 
 impl TextTransaltorResponse {
-    pub fn new(text: String) -> Self{
-        Self { text: text }
+    pub fn new(text: String) -> Self {
+        Self { text }
     }
 }
 
@@ -29,4 +29,3 @@ pub struct ModelGardenResponse {
     #[serde(flatten)]
     model_garden: ModelGarden,
 }
-

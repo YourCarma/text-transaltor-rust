@@ -2,18 +2,18 @@ use getset::Getters;
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Getters)]
-#[getset(get="pub")]
-pub struct OpenRouterError{
-    error: ErrorUnit
+#[getset(get = "pub")]
+pub struct OpenRouterError {
+    error: ErrorUnit,
 }
 
 #[derive(Serialize, Deserialize, Getters)]
-#[getset(get="pub")]
-pub struct ErrorUnit{
+#[getset(get = "pub")]
+pub struct ErrorUnit {
     code: i32,
     message: String,
     #[serde(skip_serializing_if = "Option::is_none")]
-    metadata: Option<String>
+    metadata: Option<String>,
 }
 
 pub enum OpenRouterErrorCodes {

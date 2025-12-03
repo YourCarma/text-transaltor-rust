@@ -8,5 +8,5 @@ use crate::modules::llm_client::WorkingMode;
 pub struct ServerConfig {
     address: String,
     llm_mode: WorkingMode,
-    allowed_languages: Vec<String>
+    allowed_languages: Vec<String>,
 }
