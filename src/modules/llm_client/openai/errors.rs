@@ -1,5 +1,4 @@
 use async_openai::error::OpenAIError;
-use base64::DecodeError;
 use serde_json::Error as SerdeError;
 use std::io::Error as IOError;
 
@@ -66,12 +65,6 @@ impl From<OpenAIError> for TranslatorErrors {
             }
             _ => TranslatorErrors::AnotherError(format!("OpenAI Generation Error: {}", err)),
         }
-    }
-}
-
-impl From<DecodeError> for TranslatorErrors {
-    fn from(err: DecodeError) -> Self {
-        TranslatorErrors::IOError(format!("Error of decoding image: {}", err))
     }
 }
 

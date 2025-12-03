@@ -16,8 +16,11 @@ pub async fn model_garden(server_config: &ServiceConfig) -> LoaderResult<ModelGa
     const SOURCE_LANGUAGE_IDX: usize = 0;
     const TARGET_LANGUAGE_IDX: usize = 1;
     tracing::info!("Getting languages");
-    let manifest_dir = env::var("CARGO_MANIFEST_DIR").unwrap_or_else(|_| ".".to_string());
-    let file_path = Path::new(&manifest_dir).join("src/modules/loader/assets/iso639.json");
+    // let manifest_dir = env::var("CARGO_MANIFEST_DIR").unwrap_or_else(|_| ".".to_string());
+    // let file_path = Path::new(&manifest_dir).join("src/modules/loader/assets/iso639.json");
+    let cwd = env::current_dir().unwrap();
+    let file_path = Path::new(&cwd).join("assets/iso639.json");
+    tracing::debug!("{:?}", file_path);
     let mut language_permutations: Vec<Vec<&String>> = server_config
         .server()
         .allowed_languages()
@@ -32,7 +35,6 @@ pub async fn model_garden(server_config: &ServiceConfig) -> LoaderResult<ModelGa
     let deserialized_data: Value = serde_json::from_str(&formalized_string)?;
 
     drop(formalized_string);
-    drop(file_path);
 
     let deserialized_object = deserialized_data.as_object();
     if let Some(langs) = deserialized_object {

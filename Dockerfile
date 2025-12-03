@@ -38,6 +38,7 @@ RUN apt-get update && apt install -y openssl ca-certificates
 WORKDIR /app
 
 COPY ./config /app/config
+COPY ./assets /app/assets
 COPY --from=builder /app/target/release/run_server .
 
 # Execute to initliaze elasticsearch environment
