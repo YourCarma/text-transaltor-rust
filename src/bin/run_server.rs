@@ -1,3 +1,5 @@
+use std::sync::Arc;
+
 use axum_tracing_opentelemetry::middleware::OtelAxumLayer;
 use tokio::net::TcpListener;
 use tower_http::{cors, trace};
@@ -16,7 +18,7 @@ async fn main() -> anyhow::Result<()> {
     let mode = config.server().llm_mode();
     let llm_client = mode.create_client(llm_client_config).await?;
 
-    let server_app = AppState::new(llm_client);
+    let server_app = AppState::new(llm_client, Arc::new(config.clone()));
 
     let cors_layer = cors::CorsLayer::permissive();
     let trace_layer = trace::TraceLayer::new_for_http()
@@ -34,8 +36,8 @@ async fn main() -> anyhow::Result<()> {
         "Running server on"
     );
     tracing::info!(
-        address = format!("{}", server_config.address()),
-        "Running server on"
+        available_languages = format!("{:?}", server_config.allowed_languages()),
+        "Available languages:"
     );
 
     let listener = TcpListener::bind(server_config.address()).await?;

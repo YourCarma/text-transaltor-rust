@@ -7,5 +7,6 @@ use crate::modules::llm_client::WorkingMode;
 #[getset(get = "pub")]
 pub struct ServerConfig {
     address: String,
-    llm_mode: WorkingMode
+    llm_mode: WorkingMode,
+    allowed_languages: Vec<String>
 }

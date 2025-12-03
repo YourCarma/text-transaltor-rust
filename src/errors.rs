@@ -9,7 +9,7 @@ use crate::server::errors::ServerError;
 pub struct ErrorResponse {
     code: u16,
     error: String,
-    message: String,
+    detail: String,
 }
 
 impl ErrorResponse {
@@ -17,7 +17,7 @@ impl ErrorResponse {
         ErrorResponse {
             code,
             error: err.to_string(),
-            message: msg.to_string(),
+            detail: msg.to_string(),
         }
     }
 }

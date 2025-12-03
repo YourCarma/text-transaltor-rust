@@ -1,6 +1,7 @@
 use crate::errors::*;
-use crate::server::router::models::{TextTransaltorRequest, TextTransaltorResponse};
+use crate::server::router::models::{ModelGardenResponse, TextTransaltorRequest, TextTransaltorResponse};
 use crate::server::router::llm_client::*;
+use crate::server::router::loader::*;
 use utoipa::OpenApi;
 
 #[derive(OpenApi)]
@@ -20,12 +21,14 @@ use utoipa::OpenApi;
     components(
         schemas(
             TextTransaltorRequest,
+            ModelGardenResponse,
             Successful,
             ErrorResponse,
         ),
     ),
     paths(
-       translate_text
+    get_available_languages,
+    translate_text,
     )
 )]
 pub(super) struct ApiDoc;

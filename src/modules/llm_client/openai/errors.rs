@@ -14,7 +14,7 @@ impl From<OpenAIError> for TranslatorErrors {
             OpenAIError::InvalidArgument(err) => TranslatorErrors::AnotherError(err.to_string()),
             OpenAIError::FileReadError(err) | 
             OpenAIError::FileSaveError(err) => TranslatorErrors::IOError(err.to_string()),
-            OpenAIError::Reqwest(err) => TranslatorErrors::RequestError(format!("Request Error: {}", err.to_string())),
+            OpenAIError::Reqwest(err) => TranslatorErrors::ServiceUnavailable(format!("Request Error: {}", err.to_string())),
             OpenAIError::JSONDeserialize(context, err) => {
                 let error: Result<OpenRouterError, _> = serde_json::from_str(&err);
                 match error{

@@ -5,6 +5,7 @@ use serde::Serialize;
 use thiserror::Error;
 use utoipa::ToSchema;
 
+use crate::modules::loader::errors::LoaderErrors;
 use crate::server::swagger::SwaggerExample;
 use crate::modules::llm_client::errors::TranslatorErrors;
 
@@ -40,6 +41,8 @@ pub enum ServerError {
     SerdeError(String),
     #[error("Reqeust error: {0}")]
     RequestError(String),
+    #[error("Unsupptored Language: {0}")]
+    UnsupportedLanguage(String),
 }
 
 impl ServerError {
@@ -59,6 +62,7 @@ impl ServerError {
             ServerError::InternalError(msg) => (msg.to_owned(), StatusCode::INTERNAL_SERVER_ERROR),
             ServerError::ModelModerationError(msg) => (msg.to_owned(), StatusCode::FORBIDDEN),
             ServerError::SerdeError(msg) => (msg.to_owned(), StatusCode::UNPROCESSABLE_ENTITY),
+            ServerError::UnsupportedLanguage(msg) => (msg.to_owned(), StatusCode::UNPROCESSABLE_ENTITY)
         }
     }
 }
@@ -83,16 +87,26 @@ impl From<TranslatorErrors> for ServerError {
     }
 }
 
+impl From<LoaderErrors> for ServerError {
+    fn from(err: LoaderErrors) -> Self {
+        tracing::error!("Error: {err}", err=err.to_string());
+        match err {
+            LoaderErrors::IOError(err) => ServerError::BadRequest("Error reading file".to_string()),
+            LoaderErrors::AnotherError(_err) => ServerError::InternalError("Internal Server Error".to_string()),
+        }
+    }
+}
+
 impl IntoResponse for ServerError {
     fn into_response(self) -> Response {
         #[derive(Serialize)]
         struct ErrorResponse {
-            message: String,
+            detail: String,
         }
 
         let (msg, status) = self.status_code();
         let mut resp = Json(ErrorResponse {
-            message: msg.to_string(),
+            detail: msg.to_string(),
         })
         .into_response();
 

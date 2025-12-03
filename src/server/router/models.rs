@@ -2,7 +2,7 @@ use getset::Getters;
 use serde::{Deserialize, Serialize};
 use utoipa::ToSchema;
 
-use crate::modules::llm_client::models::{TranslateTask};
+use crate::modules::{llm_client::models::TranslateTask, loader::models::units::ModelGarden};
 
 #[derive(Serialize, Deserialize, Getters, ToSchema)]
 #[getset(get = "pub")]
@@ -23,4 +23,10 @@ impl TextTransaltorResponse {
     }
 }
 
+#[derive(Serialize, Deserialize, Getters, ToSchema)]
+#[getset(get = "pub")]
+pub struct ModelGardenResponse {
+    #[serde(flatten)]
+    model_garden: ModelGarden,
+}
 

@@ -1,6 +1,7 @@
 [server]
 address = "0.0.0.0:10001"
 llm_mode="openai"
+allowed_languages=["ru", "en", "fr", "uk", "ar", "de", "es", "it", "zh", "pl"]
 #mode="ollama"
 
 [llm_client.openai]

@@ -59,6 +59,8 @@ features = [
     "serde"
 ]
 
+[dependencies.itertools]
+version = "0.14"
 
 [dependencies.serde]
 version = "1.0"

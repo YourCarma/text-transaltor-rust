@@ -74,7 +74,8 @@ impl LLMClient for OpenAIClient{
                                 don't decipher the abbreviations.
                                  Do not add comments, explanations, or summaries. 
                                  If a term is ambiguous, keep the original or use the most neutral equivalent. 
-                                 By default, perform translation only.";
+                                 By default, perform translation only.
+                                 ";
         const MAX_TOKENS: u32 = 32_000;
         let model_name = self.options.model_name();
 
