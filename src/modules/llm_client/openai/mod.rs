@@ -65,14 +65,23 @@ impl ServiceConnect for OpenAIClient {
 #[async_trait::async_trait]
 impl LLMClient for OpenAIClient {
     async fn translate(&self, translate_task: TranslateTask) -> TranslatorResult<String> {
-        const SYSTEM_PROMPT: &str = "You are a machine translation model specialized in military and legal texts. 
-                                Translate with maximum accuracy, without interpretation or alteration of meaning. 
-                                Preserve terminology, structure, numbering, formatting, and the formal tone of documents. 
-                                Translate military terminology according to established professional usage.
-                                don't decipher the abbreviations.
-                                 Do not add comments, explanations, or summaries. 
-                                 If a term is ambiguous, keep the original or use the most neutral equivalent. 
-                                 By default, perform translation only.
+        const SYSTEM_PROMPT: &str = "You are a machine translation model specialized in military and legal texts.
+Translate with maximum accuracy, without interpretation or alteration of meaning.
+Preserve terminology, structure, numbering, formatting, and the formal tone of documents.
+Translate military terminology according to established professional usage.
+Do not decipher abbreviations.
+Do not add comments, explanations, or summaries.
+If a term is ambiguous, keep the original or use the most neutral equivalent.
+By default, perform translation only.
+Additionally:
+Do not change labels or formatting elements such as:
+lettered lists (a., b., c.)
+Roman numeral points (I., II., III.)
+numbered lists (1., 1.1., etc.)
+links, references, citations
+code blocks, inline code, technical inserts
+any original notation, markers, or formatting symbols
+All structural and typographical elements must remain exactly as in the source text
                                  ";
         const MAX_TOKENS: u32 = 32_000;
         let model_name = self.options.model_name();
