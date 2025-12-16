@@ -65,6 +65,36 @@
     "name": "Иврит",
     "native_name": "Hebrew"
   },
+  "ja": {
+    "639-1": "ja",
+    "639-2": "jap",
+    "name": "Японский",
+    "native_name": "Japanese"
+  },
+  "pt": {
+    "639-1": "pt",
+    "639-2": "por",
+    "name": "Португальский",
+    "native_name": "Portuguesec"
+  },
+  "tr": {
+    "639-1": "tr",
+    "639-2": "tr",
+    "name": "Турецкий",
+    "native_name": "Turkish"
+  },
+  "ko": {
+    "639-1": "ko",
+    "639-2": "kor",
+    "name": "Корейский",
+    "native_name": "Korean"
+  },
+  "cs": {
+    "639-1": "cs",
+    "639-2": "cs",
+    "name": "Чешский",
+    "native_name": "Czech"
+  },
 
   "auto": {
     "639-1": "auto",

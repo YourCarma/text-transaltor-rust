@@ -42,15 +42,7 @@ impl ServiceConnect for OpenAIClient {
             .with_api_base(address)
             .with_api_key(api_key);
 
-        let mut client = Client::with_config(open_ai_config);
-        if *config.use_proxy() {
-            let proxy_address = config.proxy_address();
-            tracing::info!(proxy_address=?proxy_address, "Using proxy: {proxy_address}");
-            let proxy_client = reqwest::Client::builder()
-                .proxy(reqwest::Proxy::all(proxy_address)?)
-                .build()?;
-            client = client.with_http_client(proxy_client);
-        }
+        let client = Client::with_config(open_ai_config);
 
         tracing::info!(address=?address, "Connection to base url: {address}");
         tracing::info!(api_key=?api_key, "API_Key: {api_key}");

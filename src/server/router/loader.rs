@@ -19,7 +19,7 @@ use crate::server::errors::ServerResult;
  
 Get all the combinations of allowed languages
 
-Allowed languages: `["ru", "en", "fr", "uk", "ar", "de", "es", "it", "zh", "pl"]`
+Allowed languages: `["ru", "en", "fr", "uk", "ar", "de", "es", "it", "zh", "pl", "he", "ja", "tr", "pt", "ko", "cs"]`
 
 "#,
     responses(
